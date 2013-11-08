@@ -32,33 +32,37 @@ currency?
 
 Given a `RATES.xml` of:
 
-    <?xml version="1.0"?>
-    <rates>
-      <rate>
-        <from>AUD</from>
-        <to>CAD</to>
-        <conversion>1.0079</conversion>
-      </rate>
-      <rate>
-        <from>CAD</from>
-        <to>USD</to>
-        <conversion>1.0090</conversion>
-      </rate>
-      <rate>
-        <from>USD</from>
-        <to>CAD</to>
-        <conversion>0.9911</conversion>
-      </rate>
-    </rates>
+```xml
+<?xml version="1.0"?>
+<rates>
+  <rate>
+    <from>AUD</from>
+    <to>CAD</to>
+    <conversion>1.0079</conversion>
+  </rate>
+  <rate>
+    <from>CAD</from>
+    <to>USD</to>
+    <conversion>1.0090</conversion>
+  </rate>
+  <rate>
+    <from>USD</from>
+    <to>CAD</to>
+    <conversion>0.9911</conversion>
+  </rate>
+</rates>
+```
 
 and a `TRANS.csv` of:
 
-    store,sku,amount
-    Yonkers,DM1210,70.00 USD
-    Yonkers,DM1182,19.68 AUD
-    Nashua,DM1182,58.58 AUD
-    Scranton,DM1210,68.76 USD
-    Camden,DM1182,54.64 USD
+```text
+store,sku,amount
+Yonkers,DM1210,70.00 USD
+Yonkers,DM1182,19.68 AUD
+Nashua,DM1182,58.58 AUD
+Scranton,DM1210,68.76 USD
+Camden,DM1182,54.64 USD
+```
 
 Your program should return `134.22` as the total of `DM1182` in `USD`. You can
 use the sample files from this example to test your program before submitting
@@ -68,24 +72,28 @@ an answer for the real dataset for this problem.
 
 Add this line to your application's Gemfile:
 
-    ```ruby
-    gem 'arug-trader'
-    ```
+```ruby
+gem 'arug-trader'
+```
 
 And then execute:
 
-    $ bundle
+```shell
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install arug-trader
+```shell
+$ gem install arug-trader
+```
 
 ## Usage
 
 Given input file `RATES.xml` and `TRANS.csv` the program can be run requesting
 the grand total of sales for item `DM1182` across all stores in `USD` with:
 
-```
+```shell
 $ arug-trader DM1182 USD RATES.xml TRANS.csv
 134.22
 ```
