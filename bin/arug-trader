@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'arug/trader'
+
+puts "USAGE: arug-trader ITEM CURRENCY RATES TRANSACTIONS"
