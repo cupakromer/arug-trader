@@ -1,14 +1,14 @@
 require 'spec_helper'
-require 'arug/trader/transaction_file'
+require 'arug/trader/transactions_file'
 
 module Arug
   module Trader
-    describe TransactionFile do
+    describe TransactionsFile do
 
       context "with no line items" do
         it "reading the file returns an empty array" do
           with_temp_file("no_line_items.csv", "store,sku,amount") do |file_path|
-            file = TransactionFile.new(file_path)
+            file = TransactionsFile.new(file_path)
 
             expect(file.read).to eq []
           end
@@ -24,7 +24,7 @@ Yonkers,DM1182,19.68 AUD
 Nashua,DM1182,58.58 AUD
 EOF
 
-            file = TransactionFile.new(file_path)
+            file = TransactionsFile.new(file_path)
 
             expect(file.read).to match_array [
               LineItem.new(

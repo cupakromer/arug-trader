@@ -4,7 +4,7 @@ require 'pathname'
 
 module Arug
   module Trader
-    class TransactionFile
+    class TransactionsFile
       def self.read(file_path)
         new(file_path).read
       end
