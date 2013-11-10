@@ -54,6 +54,10 @@ module Arug
         amount.hash ^ currency.hash
       end
 
+      def round(n = 2, mode = :banker)
+        Money.new(amount.round(n, mode), currency)
+      end
+
       def to_f
         amount.to_f
       end

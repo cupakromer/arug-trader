@@ -6,7 +6,7 @@ module Arug
   module Trader
     describe Exchange do
 
-      def create_conversion(from, to, rate)
+      def rate(from, to, rate)
         OpenStruct.new(from: from, to: to, rate: rate)
       end
 
@@ -33,15 +33,21 @@ module Arug
       context "given a direct conversion" do
         subject(:exchange) {
           Exchange.new([
-            create_conversion('CAD', 'EUR', 9.9999),
-            create_conversion('CAD', 'USD', 0.8870)
+            rate('CAD', 'EUR', 9.9999),
+            rate('CAD', 'USD', 0.8870)
           ])
         }
 
         it "returns new money in the desired currency" do
           money = Money.new(1.20, 'CAD')
 
-          expect(exchange.convert(money, 'USD')).to eq Money.new(1.06, 'USD')
+          expect(exchange.convert(money, 'USD').currency).to eq 'USD'
+        end
+
+        it "returns new money rounded to two decimals using bankers rounding" do
+          money = Money.new(1.20, 'CAD')
+
+          expect(exchange.convert(money, 'USD').amount).to eq BigDecimal('1.06')
         end
       end
 

@@ -25,6 +25,49 @@ module Arug
         end
       end
 
+      context "rounding money" do
+        subject(:money) { Money.new(1.013952, 'YEN') }
+
+        let(:amount) { double(BigDecimal) }
+        let(:rounded) { double(Money) }
+
+        before do
+          # This is an ugly hack because BigDecimal will not let us stub methods
+          # on it's instances
+          money.instance_variable_set(:@amount, double(BigDecimal))
+
+          allow(money.amount).to receive(:round)
+            .with(3, :floor)
+            .and_return(amount)
+
+          allow(Money).to receive(:new).and_return(rounded)
+        end
+
+        it "delegates the calculation to the amount" do
+          expect(money.amount).to receive(:round)
+            .with(3, :floor)
+            .and_return(amount)
+
+          money.round(3, :floor)
+        end
+
+        it "creates new money with the rounded amount" do
+          expect(Money).to receive(:new)
+            .with(amount, anything)
+            .and_return(rounded)
+
+          expect(money.round(3, :floor)).to be rounded
+        end
+
+        it "keeps the currency" do
+          expect(Money).to receive(:new)
+            .with(anything, 'YEN')
+            .and_return(rounded)
+
+          expect(money.round(3, :floor)).to be rounded
+        end
+      end
+
       it "is represented as a float by the amount as a float" do
         expect(Money.new(1.01, 'USD').to_f).to eq 1.01
       end
