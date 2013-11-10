@@ -11,15 +11,6 @@ module Arug
       end
 
       def +(other)
-        unless self.class === other && currency == other.currency
-          raise ArgumentError, "Currency mismatch"
-        end
-
-        sum = amount + other.amount
-        self.class.new(sum, currency)
-      end
-
-      def +(other)
         raise ArgumentError, "Currency mismatch" unless currency_match? other
 
         self.class.new(amount + other.amount, currency)
