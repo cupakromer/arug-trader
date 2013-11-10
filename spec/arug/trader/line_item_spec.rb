@@ -22,6 +22,15 @@ module Arug
         expect(line.amount).to eq expected_amount
       end
 
+      it "delegates currency to the amount" do
+        amount = Money.new(1.01, "USD")
+        expect(amount).to receive(:currency).and_return("USD")
+
+        line = LineItem.new(store: "Acme, Inc.", amount: amount)
+
+        expect(line.currency).to eq "USD"
+      end
+
       it "allows Money as an amount" do
         expected_amount = Money.new(1.01, "USD")
         line = LineItem.new(store: "Acme, Inc.", amount: expected_amount)
@@ -103,6 +112,27 @@ module Arug
           end
         end
 
+        context "checking if it matches a criteria hash" do
+          subject(:line) {
+            LineItem.new(sku: "DM1123A", color: :red, amount: "1.01 USD")
+          }
+
+          it "matches if the criteria are empty" do
+            expect(line.matches?({})).to be true
+          end
+
+          it "matches when all criteria are met" do
+            expect(line.matches?(sku: "DM1123A", color: :red)).to be true
+          end
+
+          it "does not match otherwise" do
+            expect(line.matches?(color: 'red')).to be false
+          end
+
+          it "normalizes the field names" do
+            expect(line.matches?("COlor" => :red)).to be true
+          end
+        end
         context "converting the line item to a hash" do
           it "maps field names, as downcased symbol keys, to the values" do
             amount = Money.new(1.01, 'USD')

@@ -25,6 +25,10 @@ module Arug
         end
       end
 
+      it "is represented as a float by the amount as a float" do
+        expect(Money.new(1.01, 'USD').to_f).to eq 1.01
+      end
+
       it "is represented as a string by it's amount and currency" do
         expect(money.to_s).to eq "42.55 USD"
       end
@@ -92,6 +96,74 @@ module Arug
           m1 = Money.new(11.23, "USD")
 
           expect(m1).not_to eq 5
+        end
+      end
+
+      it "can be multiplied by a number" do
+        m1 = Money.new(1.01, "USD")
+
+        expect(m1 * 2).to eq Money.new(2.02, "USD")
+      end
+
+      it "can be multiplied by a decimal" do
+        m1 = Money.new(1.01, "USD")
+
+        expect(m1 * 2.01).to eq Money.new(2.0301, "USD")
+      end
+
+      it "can be divided by a number" do
+        m1 = Money.new(1.00, "USD")
+
+        expect(m1 / 4).to eq Money.new(0.25, "USD")
+      end
+
+      it "can be divided by a decimal" do
+        m1 = Money.new(5.25, "USD")
+
+        expect(m1 / 2.1).to eq Money.new(2.50, "USD")
+      end
+
+      context "given two monies with the same currency" do
+        subject(:moneyA) { Money.new(1.11, 'USD') }
+
+        let(:moneyB) { Money.new(1.01, 'USD') }
+
+        it "they can be added" do
+          expect(moneyA + moneyB).to eq Money.new(2.12, 'USD')
+        end
+
+        it "they can be subtracted" do
+          expect(moneyA - moneyB).to eq Money.new(0.10, 'USD')
+        end
+
+        it "they cannot be multiplied" do
+          expect{ moneyA * moneyB }.to raise_error "Cannot multiply by money"
+        end
+
+        it "they cannot be divided" do
+          expect{ moneyA / moneyB }.to raise_error "Cannot divide by money"
+        end
+      end
+
+      context "given two monies with different currencies" do
+        subject(:moneyA) { Money.new(1.11, 'USD') }
+
+        let(:moneyB) { Money.new(1.01, 'EUR') }
+
+        it "they cannot be added" do
+          expect{ moneyA + moneyB }.to raise_error "Currency mismatch"
+        end
+
+        it "they cannot be subtracted" do
+          expect{ moneyA - moneyB }.to raise_error "Currency mismatch"
+        end
+
+        it "they cannot be multiplied" do
+          expect{ moneyA * moneyB }.to raise_error "Cannot multiply by money"
+        end
+
+        it "they cannot be divided" do
+          expect{ moneyA / moneyB }.to raise_error "Cannot divide by money"
         end
       end
 

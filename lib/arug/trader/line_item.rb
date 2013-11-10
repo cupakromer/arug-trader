@@ -20,6 +20,10 @@ module Arug
         other.respond_to?(:pairs, true) ?  pairs == other.pairs : false
       end
 
+      def currency
+        amount.currency
+      end
+
       def each(&block)
         pairs.each(&block)
       end
@@ -37,6 +41,10 @@ module Arug
         pair_list = pairs.map{ |k, v| "#{k}: #{v.inspect}" }.join(", ")
 
         "#<#{self.class}:0x%08x #{pair_list}>" % (object_id << 1)
+      end
+
+      def matches?(criteria)
+        criteria.all?{ |field, value| pairs[field.downcase.to_sym] == value }
       end
 
       def to_h
