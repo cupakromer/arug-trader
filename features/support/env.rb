@@ -1,3 +1,8 @@
+if ENV['COVERALLS']
+  require 'coveralls'
+  Coveralls.wear_merged!
+end
+
 require 'aruba/cucumber'
 
 Before do

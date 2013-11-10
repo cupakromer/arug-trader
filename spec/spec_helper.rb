@@ -1,14 +1,14 @@
+if ENV['COVERALLS']
+  require 'coveralls'
+  Coveralls.wear_merged!
+end
+
 require 'pathname'
 
 module RSpec
   def self.root
     @rspec_root ||= Pathname.new(__dir__)
   end
-end
-
-if ENV['COVERALLS']
-  require 'coveralls'
-  Coveralls.wear!
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
