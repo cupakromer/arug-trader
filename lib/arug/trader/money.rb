@@ -22,15 +22,13 @@ module Arug
       def +(other)
         raise ArgumentError, "Currency mismatch" unless currency_match? other
 
-        sum = amount + other.amount
-        self.class.new(sum, currency)
+        self.class.new(amount + other.amount, currency)
       end
 
       def -(other)
         raise ArgumentError, "Currency mismatch" unless currency_match? other
 
-        diff = amount - other.amount
-        self.class.new(diff, currency)
+        self.class.new(amount - other.amount, currency)
       end
 
       def *(num)
