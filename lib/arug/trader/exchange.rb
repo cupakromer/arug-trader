@@ -1,24 +1,33 @@
+require 'arug/trader/best_conversion'
 require 'arug/trader/money'
 
 module Arug
   module Trader
+    UnknownExchange = Class.new(RuntimeError)
+
     class Exchange
-      def initialize(rates)
-        @rates = Array(rates)
+      def initialize(rates, rate_mapper = BestConversion)
+        @rate_mapper = rate_mapper.new(Array(rates))
       end
 
       def convert(money, currency)
-        return money.dup if money.currency == currency
+        source, target = money.currency, currency
 
-        rate = rates.find{ |r| r.from == money.currency && r.to == currency }
+        return money if source == target
 
-        base = Money.new(money.amount, currency)
+        rates = rate_mapper.path(from: source, to: target)
 
-        (base * rate.rate).round(2, :banker)
+        if rates.empty?
+          raise UnknownExchange, "'#{source}' -> '#{target}'"
+        else
+          rates.inject(Money.new(money.amount, target)){ |converted, rate|
+            (converted * rate.rate).round(2, :banker)
+          }
+        end
       end
 
       private
-      attr_reader :rates
+      attr_reader :rate_mapper
     end
   end
 end

@@ -1,3 +1,4 @@
+require 'arug/trader/best_conversion'
 require "arug/trader/exchange"
 require "arug/trader/ledger"
 require "arug/trader/line_item"
