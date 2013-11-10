@@ -1,4 +1,21 @@
 #!/usr/bin/env ruby
 require 'arug/trader'
+require 'pathname'
 
-puts "USAGE: arug-trader ITEM CURRENCY RATES TRANSACTIONS"
+unless 4 == ARGV.count
+  STDERR.puts "USAGE: arug-trader ITEM CURRENCY RATES TRANSACTIONS"
+  exit false
+end
+
+item              = ARGV[0]
+currency          = ARGV[1]
+rates_file        = Pathname.new(ARGV[2])
+transactions_file = Pathname.new(ARGV[3])
+
+rates    = Arug::Trader::RatesFile.read(rates_file)
+exchange = Arug::Trader::Exchange.new(rates)
+
+line_items = Arug::Trader::TransactionsFile.read(transactions_file)
+ledger     = Arug::Trader::Ledger.new(line_items, exchange)
+
+puts "%.2f" % ledger.sum(currency, sku: item)
